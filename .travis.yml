@@ -11,6 +11,9 @@ addons:
     - tree
   ssh_known_hosts:
     - www.amelvin.co.uk:4022
+env:
+  global:
+    - SKETCH_LOCATION = $TRAVIS_BUILD_DIR
 install:
 - set -e
 - export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
@@ -33,7 +36,7 @@ install:
 script:
 - echo -e "travis_fold:end:sketch_test_env_prepare"
 - echo -e "travis_fold:start:sketch_test"
-- build_sketches $HOME/arduino_ide $TRAVIS_BUILD_DIR "-l $HOME/Arduino/libraries"
+- build_sketches $HOME/arduino_ide $SKETCH_LOCATION "-l $HOME/Arduino/libraries"
 - echo -e "travis_fold:end:sketch_test"
 - echo -e "travis_fold:start:size_report"
 - cat size.log
@@ -43,11 +46,16 @@ script:
 before_install:
 - openssl aes-256-cbc -K $encrypted_8a7607999119_key -iv $encrypted_8a7607999119_iv
   -in travisgit.enc -out /tmp/travis.key -d
+- chmod 600 /tmp/travis.key
+after_success:
+  - mkdir /tmp/package
+  - cp $BINARY_FILE "/tmp/package/firmware.bin"
+  - cp -r "$SKETCH_LOCATION/data" "/tmp/package/"
+  - ls /tmp/package/
 deploy:
 - provider: script
   skip_cleanup: true
   on:
     #repo: sticilface/ESPmanager
     all_branches: true
-  file: $BINARY_FILE
-  script: /bin/sh travis/deploy.sh latest
+  script: /bin/sh travis/deploy.sh $BINARY_FILE latest
