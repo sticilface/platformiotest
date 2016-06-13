@@ -95,7 +95,9 @@ script:
   - tar xf arduino.tar.xz
   - mv arduino-nightly $HOME/arduino_ide
   - cd $HOME/arduino_ide/hardware
-  - git clone https://github.com/esp8266/Arduino esp8266com
+  - mkdir esp8266com
+  - cd esp8266com
+  - git clone https://github.com/esp8266/Arduino esp8266
   - cd esp8266/tools
   - python get.py
   - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
