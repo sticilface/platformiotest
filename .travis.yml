@@ -100,6 +100,7 @@ script:
   - cd esp8266com
   - git clone https://github.com/esp8266/Arduino esp8266
   - ln -s ./esp8266/tools $TRAVIS_BUILD_DIR
+  - ls $TRAVIS_BUILD_DIR/tools
   - cd esp8266/tools
   - python get.py
   - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
