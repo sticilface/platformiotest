@@ -10,10 +10,11 @@ addons:
     - g++-4.8
     - tree
   ssh_known_hosts:
-    - www.amelvin.co.uk:4022
+  - www.amelvin.co.uk:4022
 env:
   global:
-    - SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
+  - SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
+  - secure: xwPWHNhWemBD/aKlaswdPmdbLUd2dPNM4aUPa4z9lSmrHa09EEpfL/qu2bmMPcjqI2bxM0ZgUky7wDbxhVUajdJ+eveyF+y/ZYr1fjVHSn/D9PHfheD+1q3Fq+RtSY81/Vlpq3ZhBsVwo3D1ceFMI7Cff01k6xTy2TsVTV73CJ8koK/vDZnHgNY8fLnOedjAq5XUgFkcASAesFg7DHLrSiEZc7RoQ4eBpyDmRqAPHggk/4SVJsj7fSoV1DXspFPvS8mtii8lPwy1EH6CQ+twvZtgmAfngzBeMN3ZHMnwkzB/R5lXEbSKl/deFj3sfudgOo/9XOOJ3av13pahGDsATFPyAu6rj7FTQaddg2ezM7CL/2SMdXG2c+IwSG0WjfZXwXRJ6+WUVWzNIASixNu4MpdEQWtt9Mv2ujVdsiS3oVxqzQqwdwIGMkkiOprdvvIlopzU/bnrYRyImrwMpKicvNu/1RGZ32yM9QqBtl+sdBFJEmQyNXDVBqPWSaZY233WtI6q8SrLw73VyV/87K/wxXmo7Xk6BREVmcJJve1UOnlaI1B/CTEiyzllcRsINsMKdKbXj76IAhKcrgOL93ox4f9/fIKvQ9EMn0z5pKdovKKb0eknvvLozALGrBxiFPN2uwAT8YZ5Sd5/l0nD6g90O76NFY3PH8pdhjkptNPQY3s=
 install:
 - set -e
 - export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
@@ -48,14 +49,13 @@ before_install:
   -in travisgit.enc -out /tmp/travis.key -d
 - chmod 600 /tmp/travis.key
 after_success:
-  - mkdir /tmp/package
-  - cp $BINARY_FILE "/tmp/package/firmware.bin"
-  - cp -r "$SKETCH_LOCATION/data" "/tmp/package/"
-  - ls /tmp/package/
+- mkdir /tmp/package
+- cp $BINARY_FILE "/tmp/package/firmware.bin"
+- cp -r "$SKETCH_LOCATION/data" "/tmp/package/"
+- ls /tmp/package/
 deploy:
 - provider: script
   skip_cleanup: true
   on:
-    #repo: sticilface/ESPmanager
     all_branches: true
   script: /bin/sh travis/deploy.sh $BINARY_FILE latest
