@@ -1,193 +1,53 @@
-# Continuous Integration (CI) is the practice, in software
-# engineering, of merging all developer working copies with a shared mainline
-# several times a day < http://docs.platformio.org/en/latest/ci/index.html >
-#
-# Documentation:
-#
-# * Travis CI Embedded Builds with PlatformIO
-#   < https://docs.travis-ci.com/user/integration/platformio/ >
-#
-# * PlatformIO integration with Travis CI
-#   < http://docs.platformio.org/en/latest/ci/travis.html >
-#
-# * User Guide for `platformio ci` command
-#   < http://docs.platformio.org/en/latest/userguide/cmd_ci.html >
-#
-#
-# Please choice one of the following templates (proposed below) and uncomment
-# it (remove "# " before each line) or use own configuration according to the
-# Travis CI documentation (see above).
-#
-
-
-#
-# Template #1: General project. Test it using existing `platformio.ini`.
-#
-
-# language: python
-# python:
-#     - "2.7"
-#
-# sudo: false
-# cache:
-#     directories:
-#         - "~/.platformio"
-#
-# install:
-#     - pip install -U platformio
-#     - git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
-#
-# script:
-#     - platformio run
-
-
-
-# Template #2: The project is intended to by used as a library with examples
-#
-#
-# language: python
-# python:
-#     - "2.7"
-#
-# sudo: false
-# cache:
-#     directories:
-#         - "~/.platformio"
-#
-# env:
-#     - PLATFORMIO_CI_SRC=path/to/test/file.c
-#     - PLATFORMIO_CI_SRC=examples/file.ino
-#     - PLATFORMIO_CI_SRC=path/to/test/directory
-#
-# install:
-#     - pip install -U platformio
-#     - git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
-#
-#
-# script:
-#     - platformio ci --lib="." --board=TYPE_1 --board=TYPE_2 --board=TYPE_N
-
-# Template #3: Arduino
-
 sudo: false
 language: bash
 os:
-  - linux
-
+- linux
 addons:
   apt:
     sources:
-      - ubuntu-toolchain-r-test
+    - ubuntu-toolchain-r-test
     packages:
-      - g++-4.8
-      - tree
-
+    - g++-4.8
+    - tree
+  ssh_known_hosts:
+    - www.amelvin.co.uk:4022
 install:
-  - set -e
-  - export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
-  #- echo -e "travis_fold:start:host_tests"
-  #- pushd $TRAVIS_BUILD_DIR/tests/host
-  #- make
-  #- make clean-objects
-  #- echo -e "travis_fold:end:host_tests"
-  #- echo -e "travis_fold:start:sketch_test_env_prepare"
-  #- popd
-  - wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
-  - tar xf arduino.tar.xz
-  - mv arduino-nightly $HOME/arduino_ide
-  - cd $HOME/arduino_ide/hardware
-  - mkdir esp8266com
-  - cd esp8266com
-  - git clone https://github.com/esp8266/Arduino esp8266
-  - cd esp8266/tools
-  #- mkdir $TRAVIS_BUILD_DIR/tools
-  #- cp build.py $TRAVIS_BUILD_DIR/tools/
-  - python get.py
-  - export PATH="$HOME/arduino_ide:$HOME/arduino_ide/hardware/esp8266com/esp8266/tools/xtensa-lx106-elf/bin:$PATH"
-  - which arduino
-  - which xtensa-lx106-elf-size
-  - cd $TRAVIS_BUILD_DIR
-  - tree
-  - source travis/common.sh
-  - install_libraries
+- set -e
+- export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
+- wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
+- tar xf arduino.tar.xz
+- mv arduino-nightly $HOME/arduino_ide
+- cd $HOME/arduino_ide/hardware
+- mkdir esp8266com
+- cd esp8266com
+- git clone https://github.com/esp8266/Arduino esp8266
+- cd esp8266/tools
+- python get.py
+- export PATH="$HOME/arduino_ide:$HOME/arduino_ide/hardware/esp8266com/esp8266/tools/xtensa-lx106-elf/bin:$PATH"
+- which arduino
+- which xtensa-lx106-elf-size
+- cd $TRAVIS_BUILD_DIR
+- tree
+- source travis/common.sh
+- install_libraries
 script:
-  - echo -e "travis_fold:end:sketch_test_env_prepare"
-  - echo -e "travis_fold:start:sketch_test"
-  - build_sketches $HOME/arduino_ide $TRAVIS_BUILD_DIR "-l $HOME/Arduino/libraries"
-  # - build_sketches $HOME/arduino_ide $TRAVIS_BUILD_DIR "-l $HOME/Arduino/libraries"
-  - echo -e "travis_fold:end:sketch_test"
-  - echo -e "travis_fold:start:size_report"
-  - cat size.log
-  - echo -e "travis_fold:end:size_report"
-  # - tree $TRAVIS_BUILD_DIR
-  - export BINARY_FILE=$(find $TRAVIS_BUILD_DIR/build.tmp -iname "*.bin")
-  - echo $BINARY_FILE
-
-# after_success:
-#     - pushd $TRAVIS_BUILD_DIR/tests/host
-#     - bash <(curl -s https://codecov.io/bash) -X gcov
-
-
-# 4  working
-
-# sudo: false
-# language: bash
-# os:
-#   - linux
-# addons:
-#   apt:
-#     packages:
-#       - tree
-# script:
-#   - /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16
-#   - sleep 3
-#   - export DISPLAY=:1.0
-#   - wget http://downloads.arduino.cc/arduino-1.6.5-linux64.tar.xz
-#   - tar xf arduino-1.6.5-linux64.tar.xz
-#   - mv arduino-1.6.5 $HOME/arduino_ide
-#   - export PATH="$HOME/arduino_ide:$PATH"
-#   - which arduino
-#   - mkdir -p $HOME/Arduino/libraries
-#   - cp -r $TRAVIS_BUILD_DIR $HOME/Arduino/libraries/ESPAsyncWebServer
-#   - git clone https://github.com/bblanchon/ArduinoJson $HOME/Arduino/libraries/ArduinoJson
-#   - git clone https://github.com/me-no-dev/ESPAsyncTCP $HOME/Arduino/libraries/ESPAsyncTCP
-#   - cd $HOME/arduino_ide/hardware
-#   - mkdir esp8266com
-#   - cd esp8266com
-#   - git clone https://github.com/esp8266/Arduino.git esp8266
-#   - cd esp8266/tools
-#   - python get.py
-#
-#   - source $TRAVIS_BUILD_DIR/travis/common.sh
-#   - arduino --board esp8266com:esp8266:generic --save-prefs
-#   - arduino --get-pref sketchbook.path
-#   - build_sketches arduino $TRAVIS_BUILD_DIR esp8266
-#   - tree $TRAVIS_BUILD_DIR/*
-
-
-#   # my version
-# sudo: false
-# language: bash
-# os:
-#   - linux
-# addons:
-#   apt:
-#     packages:
-#       - tree
-#
-# install:
-#     - wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
-#     - tar xf arduino.tar.xz
-#     - mv arduino-nightly $HOME/arduino_ide
-#     - cd $HOME/arduino_ide/hardware
-#     - mkdir esp8266com
-#     - cd esp8266com
-#     - git clone https://github.com/esp8266/Arduino esp8266
-#     - cd esp8266/tools
-#     - python get.py
-#     - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
-#     - which arduino
-#     - cd $TRAVIS_BUILD_DIR
-#     - mkdir /tmp/build
-#     - $HOME/arduino_ide/arduino-builder -build-path /tmp/build -hardware $HOME/arduino_ide/hardware -tools $HOME/arduino_ide/tools-builder -fqbn=esp8266com:esp8266:generic
-#     # -hardware ./hardware -tools ./hardware/tools/avr -tools ./tools-builder -libraries ./libraries -libraries ~/mylibs/ -fqbn arduino:avr:uno $sketch done
+- echo -e "travis_fold:end:sketch_test_env_prepare"
+- echo -e "travis_fold:start:sketch_test"
+- build_sketches $HOME/arduino_ide $TRAVIS_BUILD_DIR "-l $HOME/Arduino/libraries"
+- echo -e "travis_fold:end:sketch_test"
+- echo -e "travis_fold:start:size_report"
+- cat size.log
+- echo -e "travis_fold:end:size_report"
+- export BINARY_FILE=$(find $TRAVIS_BUILD_DIR/build.tmp -iname "*.bin")
+- echo $BINARY_FILE
+before_install:
+- openssl aes-256-cbc -K $encrypted_8a7607999119_key -iv $encrypted_8a7607999119_iv
+  -in travisgit.enc -out /tmp/travis.key -d
+deploy:
+- provider: script
+  skip_cleanup: true
+  on:
+    #repo: sticilface/ESPmanager
+    all_branches: true
+  file: $BINARY_FILE
+  script: /bin/sh travis/deploy.sh latest
