@@ -24,27 +24,27 @@
 # Template #1: General project. Test it using existing `platformio.ini`.
 #
 
-language: python
-python:
-    - "2.7"
-
-sudo: false
-cache:
-    directories:
-        - "~/.platformio"
-
-install:
-    - pip install -U platformio
-    - git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
-
-script:
-    - platformio run
- 
-
+# language: python
+# python:
+#     - "2.7"
 #
+# sudo: false
+# cache:
+#     directories:
+#         - "~/.platformio"
+#
+# install:
+#     - pip install -U platformio
+#     - git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
+#
+# script:
+#     - platformio run
+
+
+
 # Template #2: The project is intended to by used as a library with examples
 #
-
+#
 # language: python
 # python:
 #     - "2.7"
@@ -61,6 +61,54 @@ script:
 #
 # install:
 #     - pip install -U platformio
+#     - git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
+#
 #
 # script:
 #     - platformio ci --lib="." --board=TYPE_1 --board=TYPE_2 --board=TYPE_N
+
+ Template #3: Arduino
+
+sudo: false
+language: bash
+os:
+- linux
+addons:
+  apt:
+    packages:
+      - tree
+  ssh_known_hosts:
+    - www.amelvin.co.uk:4022
+install:
+- /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile
+  --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16
+- sleep 3
+- export DISPLAY=:1.0
+- wget http://downloads.arduino.cc/arduino-1.6.5-linux64.tar.xz
+- tar xf arduino-1.6.5-linux64.tar.xz
+- mv arduino-1.6.5 $HOME/arduino_ide
+- export PATH="$HOME/arduino_ide:$PATH"
+- which arduino
+- mkdir -p $HOME/Arduino/libraries
+- cp -r $TRAVIS_BUILD_DIR $HOME/Arduino/libraries/build
+- git clone https://github.com/bblanchon/ArduinoJson  $HOME/Arduino/libraries/ArduinoJson
+#- git clone https://github.com/me-no-dev/ESPAsyncWebServer $HOME/Arduino/libraries/ESPAsyncWebServer
+- git clone https://github.com/sticilface/ESPAsyncWebServer $HOME/Arduino/libraries/ESPAsyncWebServer
+- cd $HOME/Arduino/libraries/ESPAsyncWebServer
+- git checkout FileFallbackHandler
+- git clone https://github.com/me-no-dev/ESPAsyncTCP $HOME/Arduino/libraries/ESPAsyncTCP
+- cd $HOME/arduino_ide/hardware
+- mkdir esp8266com
+- cd esp8266com
+- git clone https://github.com/esp8266/Arduino.git esp8266
+- cd esp8266/tools
+- python get.py
+- mkdir $HOME/travis
+- cd $HOME/travis
+- wget https://raw.githubusercontent.com/me-no-dev/ESPAsyncTCP/master/travis/common.sh
+- source $HOME/travis/common.sh
+- arduino --board esp8266com:esp8266:generic --save-prefs
+- arduino --get-pref sketchbook.path
+script:
+- build_sketches arduino $HOME/Arduino/libraries/build esp8266
+- tree $HOME/Arduino/libraries/build
