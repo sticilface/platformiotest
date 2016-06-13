@@ -67,7 +67,7 @@
 # script:
 #     - platformio ci --lib="." --board=TYPE_1 --board=TYPE_2 --board=TYPE_N
 
-Template #3: Arduino
+# Template #3: Arduino
 
 sudo: false
 language: bash
