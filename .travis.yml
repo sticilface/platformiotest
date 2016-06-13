@@ -119,6 +119,7 @@ script:
   - cat size.log
   - echo -e "travis_fold:end:size_report"
   - tree $TRAVIS_BUILD_DIR
+  - find $TRAVIS_BUILD_DIR/build.tmp -iname "*.bin"
 
 # after_success:
 #     - pushd $TRAVIS_BUILD_DIR/tests/host
