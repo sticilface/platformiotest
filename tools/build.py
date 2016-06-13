@@ -127,8 +127,8 @@ def main():
         f = open(tmp_dir + '/build.log', 'w')
 
     res = compile(tmp_dir, sketch_path, tools_dir, hardware_dir, ide_path, f, args)
-
-    print("Result of compile: " + res)
+    c = str(res)
+    print("Result of compile: " + c)
     if res != 0:
         return res
 
