@@ -82,7 +82,7 @@ addons:
       - g++-4.8
       - tree
 
-script:
+install:
   - set -e
   - export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
   #- echo -e "travis_fold:start:host_tests"
@@ -110,6 +110,7 @@ script:
   - tree
   - source travis/common.sh
   - install_libraries
+script:
   - echo -e "travis_fold:end:sketch_test_env_prepare"
   - echo -e "travis_fold:start:sketch_test"
   - build_sketches $HOME/arduino_ide $TRAVIS_BUILD_DIR "-l $HOME/Arduino/libraries"
