@@ -58,4 +58,4 @@ deploy:
   skip_cleanup: true
   on:
     all_branches: true
-  script: /bin/sh travis/deploy.sh $BINARY_FILE latest
+  script: /bin/sh travis/deploy.sh latest

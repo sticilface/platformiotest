@@ -15,4 +15,4 @@ python $TRAVIS_BUILD_DIR/travis/buildmanifest.py /tmp/package /tmp/package/manif
 echo "DEPLOY HOME"
 
 ssh -v -p 4022  -i /tmp/travis.key $HOME_USER@www.amelvin.co.uk "mkdir -p ~/projects/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/$1/"
-scp -v -P 4022  -i /tmp/travis.key -rp /tmp/package/. "$HOME_USER@www.amelvin.co.uk:~/projects/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/$1/"  
+scp -v -P 4022  -i /tmp/travis.key -rp /tmp/package/. "$HOME_USER@www.amelvin.co.uk:~/projects/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/$1/"
