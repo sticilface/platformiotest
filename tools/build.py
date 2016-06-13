@@ -112,8 +112,8 @@ def main():
 
     # tools_dir = os.path.dirname(os.path.realpath(__file__)) + '/../tools'
     # hardware_dir = os.path.dirname(os.path.realpath(__file__)) + '/../cores'
-      tools_dir = ide_path + "/hardware/esp8266com/esp8266/tools"
-      hardware_dir = ide_path + "/hardware/esp8266com/esp8266/cores"
+    tools_dir = ide_path + "/hardware/esp8266com/esp8266/tools"
+    hardware_dir = ide_path + "/hardware/esp8266com/esp8266/cores"
 
     output_name = tmp_dir + '/' + os.path.basename(sketch_path) + '.bin'
     if args.verbose:
