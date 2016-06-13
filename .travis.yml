@@ -80,6 +80,7 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - g++-4.8
+      - tree
 
 script:
   - set -e
@@ -98,12 +99,13 @@ script:
   - mkdir esp8266com
   - cd esp8266com
   - git clone https://github.com/esp8266/Arduino esp8266
-  - ln -s esp8266/tools $TRAVIS_BUILD_DIR/tools
+  - ln -s ./esp8266/tools $TRAVIS_BUILD_DIR/tools
   - cd esp8266/tools
   - python get.py
   - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
   - which arduino
   - cd $TRAVIS_BUILD_DIR
+  - tree
   - source travis/common.sh
   - install_libraries
   - echo -e "travis_fold:end:sketch_test_env_prepare"
