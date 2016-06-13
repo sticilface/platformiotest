@@ -72,42 +72,47 @@
 sudo: false
 language: bash
 os:
-- linux
+  - linux
+
 addons:
   apt:
+    sources:
+      - ubuntu-toolchain-r-test
     packages:
-      - tree
-  ssh_known_hosts:
-    - www.amelvin.co.uk:4022
+      - g++-4.8
+
 script:
-- /sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_1.pid --make-pidfile
-  --background --exec /usr/bin/Xvfb -- :1 -ac -screen 0 1280x1024x16
-- sleep 3
-- export DISPLAY=:1.0
-- wget http://downloads.arduino.cc/arduino-1.6.5-linux64.tar.xz
-- tar xf arduino-1.6.5-linux64.tar.xz
-- mv arduino-1.6.5 $HOME/arduino_ide
-- export PATH="$HOME/arduino_ide:$PATH"
-- which arduino
-- mkdir -p $HOME/Arduino/libraries
-- cp -r $TRAVIS_BUILD_DIR $HOME/Arduino/libraries/build
-#- git clone https://github.com/bblanchon/ArduinoJson  $HOME/Arduino/libraries/ArduinoJson
-#- git clone https://github.com/me-no-dev/ESPAsyncWebServer $HOME/Arduino/libraries/ESPAsyncWebServer
-#- git clone https://github.com/sticilface/ESPAsyncWebServer $HOME/Arduino/libraries/ESPAsyncWebServer
-#- cd $HOME/Arduino/libraries/ESPAsyncWebServer
-#- git checkout FileFallbackHandler
-#- git clone https://github.com/me-no-dev/ESPAsyncTCP $HOME/Arduino/libraries/ESPAsyncTCP
-- cd $HOME/arduino_ide/hardware
-- mkdir esp8266com
-- cd esp8266com
-- git clone https://github.com/esp8266/Arduino.git esp8266
-- cd esp8266/tools
-- python get.py
-#- mkdir $HOME/travis
-#- cd $HOME/travis
-#- wget https://raw.githubusercontent.com/me-no-dev/ESPAsyncTCP/master/travis/common.sh
-- source $TRAVIS_BUILD_DIR/travis/common.sh
-- arduino --board esp8266com:esp8266:generic --save-prefs
-- arduino --get-pref sketchbook.path
-- build_sketches arduino $TRAVIS_BUILD_DIR esp8266
-- tree $TRAVIS_BUILD_DIR
+  - set -e
+  - export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
+  - echo -e "travis_fold:start:host_tests"
+  - pushd $TRAVIS_BUILD_DIR/tests/host
+  - make
+  - make clean-objects
+  - echo -e "travis_fold:end:host_tests"
+  - echo -e "travis_fold:start:sketch_test_env_prepare"
+  - popd
+  - wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
+  - tar xf arduino.tar.xz
+  - mv arduino-nightly $HOME/arduino_ide
+  - cd $HOME/arduino_ide/hardware
+  - mkdir esp8266com
+  - cd esp8266com
+  - ln -s $TRAVIS_BUILD_DIR esp8266
+  - cd esp8266/tools
+  - python get.py
+  - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
+  - which arduino
+  - cd $TRAVIS_BUILD_DIR
+  - source travis/common.sh
+  - install_libraries
+  - echo -e "travis_fold:end:sketch_test_env_prepare"
+  - echo -e "travis_fold:start:sketch_test"
+  - build_sketches $HOME/arduino_ide $TRAVIS_BUILD_DIR "-l $HOME/Arduino/libraries"
+  - echo -e "travis_fold:end:sketch_test"
+  - echo -e "travis_fold:start:size_report"
+  - cat size.log
+  - echo -e "travis_fold:end:size_report"
+
+# after_success:
+#     - pushd $TRAVIS_BUILD_DIR/tests/host
+#     - bash <(curl -s https://codecov.io/bash) -X gcov
