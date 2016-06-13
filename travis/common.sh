@@ -14,7 +14,7 @@ function build_sketches()
         fi
         echo -e "\n\n ------------ Building $sketch ------------ \n\n";
         $arduino --verbose --verify $sketch;
-        local binary = find /tmp/ -type f -name "*.bin"
+        local binary=$(find /tmp/ -type f -name "*.bin")
         echo "Binary: $binary"
         local result=$?
         if [ $result -ne 0 ]; then
