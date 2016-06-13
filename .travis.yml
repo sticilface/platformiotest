@@ -103,7 +103,7 @@ script:
   #- mkdir $TRAVIS_BUILD_DIR/tools
   #- cp build.py $TRAVIS_BUILD_DIR/tools/
   - python get.py
-  - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
+  - export PATH="$HOME/arduino_ide:$HOME/arduino_ide/hardware/esp8266com/esp8266/tools/xtensa-lx106-elf/bin:$PATH"
   - which arduino
   - which xtensa-lx106-elf-size
   - cd $TRAVIS_BUILD_DIR
