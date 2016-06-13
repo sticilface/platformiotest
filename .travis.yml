@@ -124,7 +124,7 @@
 # #     - bash <(curl -s https://codecov.io/bash) -X gcov
 
 
-#4
+4  working
 
 sudo: false
 language: bash
@@ -159,3 +159,31 @@ script:
   - arduino --get-pref sketchbook.path
   - build_sketches arduino $TRAVIS_BUILD_DIR esp8266
   - tree $TRAVIS_BUILD_DIR
+
+
+#   # my version
+# sudo: false
+# language: bash
+# os:
+#   - linux
+# addons:
+#   apt:
+#     packages:
+#       - tree
+#
+# install:
+#     - wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
+#     - tar xf arduino.tar.xz
+#     - mv arduino-nightly $HOME/arduino_ide
+#     - cd $HOME/arduino_ide/hardware
+#     - mkdir esp8266com
+#     - cd esp8266com
+#     - git clone https://github.com/esp8266/Arduino esp8266
+#     - cd esp8266/tools
+#     - python get.py
+#     - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
+#     - which arduino
+#     - cd $TRAVIS_BUILD_DIR
+#     - mkdir /tmp/build
+#     - $HOME/arduino_ide/arduino-builder -build-path /tmp/build -hardware $HOME/arduino_ide/hardware -tools $HOME/arduino_ide/tools-builder -fqbn=esp8266com:esp8266:generic
+#     # -hardware ./hardware -tools ./hardware/tools/avr -tools ./tools-builder -libraries ./libraries -libraries ~/mylibs/ -fqbn arduino:avr:uno $sketch done

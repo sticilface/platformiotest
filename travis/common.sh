@@ -13,7 +13,7 @@ function build_sketches()
             continue
         fi
         echo -e "\n\n ------------ Building $sketch ------------ \n\n";
-        $arduino --verbose --verify $sketch;
+        $arduino --verbose --upload $sketch;
         tree -a /tmp
         local binary=$(find /tmp/* -type f -name "*.bin")
         echo "Binary: $binary"
