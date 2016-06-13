@@ -103,12 +103,12 @@ install:
 - git clone https://github.com/esp8266/Arduino.git esp8266
 - cd esp8266/tools
 - python get.py
-- mkdir $HOME/travis
-- cd $HOME/travis
+#- mkdir $HOME/travis
+#- cd $HOME/travis
 #- wget https://raw.githubusercontent.com/me-no-dev/ESPAsyncTCP/master/travis/common.sh
-- source $HOME/travis/common.sh
+- source $TRAVIS_BUILD_DIR/travis/common.sh
 - arduino --board esp8266com:esp8266:generic --save-prefs
 - arduino --get-pref sketchbook.path
 script:
-- build_sketches arduino $HOME/src esp8266
-- tree $HOME/src
+- build_sketches arduino $TRAVIS_BUILD_DIR/src esp8266
+- tree $TRAVIS_BUILD_DIR/src
