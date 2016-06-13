@@ -118,6 +118,7 @@ script:
   - echo -e "travis_fold:start:size_report"
   - cat size.log
   - echo -e "travis_fold:end:size_report"
+  - tree $TRAVIS_BUILD_DIR
 
 # after_success:
 #     - pushd $TRAVIS_BUILD_DIR/tests/host
