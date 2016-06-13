@@ -155,3 +155,4 @@ script:
   - arduino --board esp8266com:esp8266:generic --save-prefs
   - arduino --get-pref sketchbook.path
   - build_sketches arduino $TRAVIS_BUILD_DIR esp8266
+  - tree $TRAVIS_BUILD_DIR
