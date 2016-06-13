@@ -105,6 +105,7 @@ script:
   - python get.py
   - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
   - which arduino
+  - which xtensa-lx106-elf-size
   - cd $TRAVIS_BUILD_DIR
   - tree
   - source travis/common.sh
