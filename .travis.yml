@@ -13,7 +13,7 @@ addons:
     - www.amelvin.co.uk:4022
 env:
   global:
-    - SKETCH_LOCATION = $TRAVIS_BUILD_DIR
+    - SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
 install:
 - set -e
 - export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
