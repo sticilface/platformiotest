@@ -93,6 +93,7 @@ def parse_args():
     return parser.parse_args()
 
 def main():
+    print("Started python builder")
     args = parse_args()
 
     ide_path = args.ide_path
