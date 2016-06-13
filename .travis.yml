@@ -104,8 +104,8 @@ script:
   - python get.py
   - export PATH="$HOME/arduino_ide:$TRAVIS_BUILD_DIR/tools/xtensa-lx106-elf/bin:$PATH"
   - which arduino
-  - cd $TRAVIS_BUILD_DIR
-  - tree
+  - cd $TRAVIS_BUILD_DIR/tools
+  - ls
   - source travis/common.sh
   - install_libraries
   - echo -e "travis_fold:end:sketch_test_env_prepare"
