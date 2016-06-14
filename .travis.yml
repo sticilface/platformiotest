@@ -31,7 +31,7 @@ install:
 script:
 - echo -e "travis_fold:end:sketch_test_env_prepare"
 - echo -e "travis_fold:start:sketch_test"
-- build_sketches $HOME/arduino_ide $SKETCH_LOCATION $BUILD_FOLDER "$LIBRARIES_LOCATION $BOARD_TYPE $FLASH_SIZE $CPU_SPEED $DEBUG_LEVEL"
+- build_sketches $HOME/arduino_ide $SKETCH_LOCATION $BUILD_FOLDER "$LIBRARIES_LOCATION $OUTPUT_FILE $BOARD_TYPE $FLASH_SIZE $CPU_SPEED $DEBUG_PORT $DEBUG_LEVEL"
 - echo -e "travis_fold:end:sketch_test"
 after_success:
 - echo -e "travis_fold:start:size_report"
