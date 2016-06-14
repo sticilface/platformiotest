@@ -3,6 +3,7 @@ language: bash
 os:
 - linux
 env:
+  matrix:
   - FLASH_SIZE="-s 512K0"    #512K0,512K64,1M512,4M1M,4M3M
   - FLASH_SIZE="-s 512K64"    #512K0,512K64,1M512,4M1M,4M3M
   - FLASH_SIZE="-s 1M512"    #512K0,512K64,1M512,4M1M,4M3M
