@@ -3,21 +3,29 @@ language: bash
 os:
 - linux
 addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
-    - tree
+#  apt:
+#    sources:
+#    - ubuntu-toolchain-r-test
+#    packages:
+#    - g++-4.8
+#    - tree
   ssh_known_hosts:
   - www.amelvin.co.uk:4022
 env:
   global:
-  - SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
+  - BUILD_FOLDER=$TRAVIS_BUILD_DIR/build.tmp
+  - SKETCH_LOCATION="$TRAVIS_BUILD_DIR/libraries"
+  - LIBRARIES_LOCATION="-l $HOME/Arduino/libraries"
+  - BOARD_TYPE="-b generic"
+  - FLASH_SIZE="-s 4M3M"    #512K0,512K64,1M512,4M1M,4M3M
+  #- CPU_SPEED="-f 80"
+  #- OUTPUT_FILE="-o somefile"
+  #- DEBUG_PORT="--debug_port Serial"
+  #- DEBUG_LEVEL="--debug_level "
   - secure: xwPWHNhWemBD/aKlaswdPmdbLUd2dPNM4aUPa4z9lSmrHa09EEpfL/qu2bmMPcjqI2bxM0ZgUky7wDbxhVUajdJ+eveyF+y/ZYr1fjVHSn/D9PHfheD+1q3Fq+RtSY81/Vlpq3ZhBsVwo3D1ceFMI7Cff01k6xTy2TsVTV73CJ8koK/vDZnHgNY8fLnOedjAq5XUgFkcASAesFg7DHLrSiEZc7RoQ4eBpyDmRqAPHggk/4SVJsj7fSoV1DXspFPvS8mtii8lPwy1EH6CQ+twvZtgmAfngzBeMN3ZHMnwkzB/R5lXEbSKl/deFj3sfudgOo/9XOOJ3av13pahGDsATFPyAu6rj7FTQaddg2ezM7CL/2SMdXG2c+IwSG0WjfZXwXRJ6+WUVWzNIASixNu4MpdEQWtt9Mv2ujVdsiS3oVxqzQqwdwIGMkkiOprdvvIlopzU/bnrYRyImrwMpKicvNu/1RGZ32yM9QqBtl+sdBFJEmQyNXDVBqPWSaZY233WtI6q8SrLw73VyV/87K/wxXmo7Xk6BREVmcJJve1UOnlaI1B/CTEiyzllcRsINsMKdKbXj76IAhKcrgOL93ox4f9/fIKvQ9EMn0z5pKdovKKb0eknvvLozALGrBxiFPN2uwAT8YZ5Sd5/l0nD6g90O76NFY3PH8pdhjkptNPQY3s=
 install:
-- set -e
-- export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
+#- set -e
+#- export CXX="g++-4.8" CC="gcc-4.8" GCOV="gcov-4.8"
 - wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
 - tar xf arduino.tar.xz
 - mv arduino-nightly $HOME/arduino_ide
@@ -32,7 +40,7 @@ install:
 - which xtensa-lx106-elf-size
 - cd $TRAVIS_BUILD_DIR
 - source $HOME/arduino_ide/hardware/esp8266com/esp8266/tests/common.sh
-- install_libraries
+#- install_libraries
 script:
 - echo -e "travis_fold:end:sketch_test_env_prepare"
 - echo -e "travis_fold:start:sketch_test"
@@ -41,7 +49,7 @@ script:
 - echo -e "travis_fold:start:size_report"
 - cat size.log
 - echo -e "travis_fold:end:size_report"
-- export BINARY_FILE=$(find $TRAVIS_BUILD_DIR/build.tmp -iname "*.bin")
+- export BINARY_FILE=$(find $BUILD_FOLDER -iname "*.bin") # not liking this as there may be more than one file
 - echo $BINARY_FILE
 before_install:
 - openssl aes-256-cbc -K $encrypted_8a7607999119_key -iv $encrypted_8a7607999119_iv
