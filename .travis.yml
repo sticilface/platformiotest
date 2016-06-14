@@ -24,15 +24,14 @@ install:
 - cd $HOME/arduino_ide/hardware
 - mkdir esp8266com
 - cd esp8266com
-- git clone https://github.com/esp8266/Arduino esp8266
+- git clone https://github.com/sticilface/arduino-esp8266 esp8266
 - cd esp8266/tools
 - python get.py
 - export PATH="$HOME/arduino_ide:$HOME/arduino_ide/hardware/esp8266com/esp8266/tools/xtensa-lx106-elf/bin:$PATH"
 - which arduino
 - which xtensa-lx106-elf-size
 - cd $TRAVIS_BUILD_DIR
-- tree
-- source travis/common.sh
+- source $HOME/arduino_ide/hardware/esp8266com/esp8266/tests/common.sh
 - install_libraries
 script:
 - echo -e "travis_fold:end:sketch_test_env_prepare"
