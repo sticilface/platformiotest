@@ -10,7 +10,7 @@ env:
   - BOARD_TYPE="-b generic"
   - FLASH_SIZE="-s 4M3M"    #512K0,512K64,1M512,4M1M,4M3M
   #- CPU_SPEED="-f 80"
-  #- OUTPUT_FILE="-o somefile"
+  - OUTPUT_FILE="-o firmware.bin"
   #- DEBUG_PORT="--debug_port Serial"
   #- DEBUG_LEVEL="--debug_level "
 install:
