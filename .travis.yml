@@ -14,7 +14,7 @@ addons:
 env:
   global:
   - BUILD_FOLDER=$TRAVIS_BUILD_DIR/build.tmp
-  - SKETCH_LOCATION="$TRAVIS_BUILD_DIR/libraries"
+  - SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
   - LIBRARIES_LOCATION="-l $HOME/Arduino/libraries"
   - BOARD_TYPE="-b generic"
   - FLASH_SIZE="-s 4M3M"    #512K0,512K64,1M512,4M1M,4M3M
