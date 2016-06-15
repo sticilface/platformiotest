@@ -1,47 +1,18 @@
+language: python
+python:
+- '2.7'
 sudo: false
-language: bash
-os:
-- linux
+cache:
+  directories:
+  - ~/.platformio
 env:
   matrix:
-  - FLASH_SIZE="-s 512K0"    #512K0,512K64,1M512,4M1M,4M3M
-  - FLASH_SIZE="-s 512K64"    #512K0,512K64,1M512,4M1M,4M3M
-  - FLASH_SIZE="-s 1M512"    #512K0,512K64,1M512,4M1M,4M3M
-  - FLASH_SIZE="-s 4M3M"    #512K0,512K64,1M512,4M1M,4M3M
-  global:
-  - BUILD_FOLDER=$TRAVIS_BUILD_DIR/build.tmp
-  - SKETCH_LOCATION="$TRAVIS_BUILD_DIR"
-  #- LIBRARIES_LOCATION="-l $HOME/Arduino/libraries"
-  - BOARD_TYPE="-b generic"
-  # - FLASH_SIZE="-s 4M3M"    #512K0,512K64,1M512,4M1M,4M3M
-  - CPU_SPEED="-f 160"
-  - OUTPUT_FILE="-o $TRAVIS_BUILD_DIR/firmware-$FLASH_SIZE.bin"
-  #- DEBUG_PORT="--debug_port Serial"
-  #- DEBUG_LEVEL="--debug_level "
+  - PLATFORMIO_CI_SRC="testfolder" 
 install:
-- wget -O arduino.tar.xz https://www.arduino.cc/download.php?f=/arduino-nightly-linux64.tar.xz
-- tar xf arduino.tar.xz
-- mv arduino-nightly $HOME/arduino_ide
-- cd $HOME/arduino_ide/hardware
-- mkdir esp8266com
-- cd esp8266com
-- git clone https://github.com/sticilface/arduino-esp8266 esp8266
-- cd esp8266/tools
-- python get.py
-- export PATH="$HOME/arduino_ide:$HOME/arduino_ide/hardware/esp8266com/esp8266/tools/xtensa-lx106-elf/bin:$PATH"
-- which arduino
-- which xtensa-lx106-elf-size
-- cd $TRAVIS_BUILD_DIR
-- source $HOME/arduino_ide/hardware/esp8266com/esp8266/tests/common.sh
+  - pip install -U platformio
+  #- git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
+  # - git clone https://github.com/sticilface/arduino-esp8266 ./platformio/packages/framework-arduinoespressif
+  - platformio lib install 64
+  - mkdir /tmp/build
 script:
-- echo -e "travis_fold:end:sketch_test_env_prepare"
-- echo -e "travis_fold:start:sketch_test"
-- build_sketches $HOME/arduino_ide $SKETCH_LOCATION $BUILD_FOLDER "$LIBRARIES_LOCATION $OUTPUT_FILE $BOARD_TYPE $FLASH_SIZE $CPU_SPEED $DEBUG_PORT $DEBUG_LEVEL"
-- echo -e "travis_fold:end:sketch_test"
-after_success:
-- echo -e "travis_fold:start:size_report"
-- cat size.log
-- echo -e "travis_fold:end:size_report"
-#- export BINARY_FILE=$(find $BUILD_FOLDER -iname "*.bin") # not liking this as there may be more than one file
-#- echo $BINARY_FILE
-- ls -la $TRAVIS_BUILD_DIR/*.bin
+  - platformio ci --board="esp12e" --build-dir="/tmp/build" --lib="." 
