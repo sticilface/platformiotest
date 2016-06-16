@@ -16,7 +16,7 @@ install:
   - pip install -U platformio
   - rm -f ./platformio/packages/framework-arduinoespressif
   - git clone -b travis https://github.com/sticilface/Arduino ./platformio/packages/framework-arduinoespressif
-  - tree ./platformio/packages/framework-arduinoespressif
+  - tree ./platformio/packages
   - cat ./platformio/packages/framework-arduinoespressif/cores/esp8266/Esp.cpp
   - mkdir /tmp/build
   - mkdir $TRAVIS_BUILD_DIR/libs
@@ -24,7 +24,6 @@ install:
   - git clone https://github.com/bblanchon/ArduinoJson                $TRAVIS_BUILD_DIR/libs/ArduinoJson
   - git clone https://github.com/me-no-dev/ESPAsyncTCP                $TRAVIS_BUILD_DIR/libs/ESPAsyncTCP
   - git clone https://github.com/me-no-dev/ESPAsyncWebServer          $TRAVIS_BUILD_DIR/libs/ESPAsyncWebServer
-
 
 script:
   - platformio ci --board="esp12e" --build-dir="/tmp/build" --lib="." --lib="$TRAVIS_BUILD_DIR/libs/ESPmanager" --lib="$TRAVIS_BUILD_DIR/libs/ArduinoJson"
