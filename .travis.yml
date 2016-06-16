@@ -14,7 +14,7 @@ addons:
     - tree
 install:
   - pip install -U platformio
-  - platformio platforms install espressif
+  - platformio platforms install espressif --with-package framework-arduinoespressif
   - rm -rf ./platformio/packages/framework-arduinoespressif
   - git clone -b travis https://github.com/sticilface/Arduino ./platformio/packages/framework-arduinoespressif
   - tree ./platformio/packages
