@@ -16,7 +16,10 @@ install:
   - pip install -U platformio
   - platformio platforms install espressif --with-package framework-arduinoespressif
   - rm -rf ~/.platformio/packages/framework-arduinoespressif
-  - git clone -b travis https://github.com/sticilface/Arduino ~/.platformio/packages/framework-arduinoespressif
+  # - git clone -b travis https://github.com/sticilface/Arduino ~/.platformio/packages/framework-arduinoespressif
+  - git clone https://github.com/esp8266/Arduino ~/.platformio/packages/framework-arduinoespressif
+  - cd ~/.platformio/packages/framework-arduinoespressif
+  - git checkout 7fd7ca68346444048f8142f27686011240bbed81
   - echo "10606" > ~/.platformio/packages/framework-arduinoespressif/version.txt
   - tree ~/.platformio/packages
   - cat ~/.platformio/packages/framework-arduinoespressif/cores/esp8266/Esp.cpp
