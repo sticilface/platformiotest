@@ -7,12 +7,24 @@ cache:
   - ~/.platformio
 env:
   matrix:
-  - PLATFORMIO_CI_SRC="testfolder" 
+  - PLATFORMIO_CI_SRC="$TRAVIS_BUILD_DIR/testfolder/testfolder.ino"
+addons:
+  apt:
+    packages:
+    - tree
 install:
   - pip install -U platformio
-  #- git clone https://github.com/esp8266/Arduino.git ./platformio/packages/framework-arduinoespressif
-  # - git clone https://github.com/sticilface/arduino-esp8266 ./platformio/packages/framework-arduinoespressif
-  - platformio lib install 64
+  - rm -f ./platformio/packages/framework-arduinoespressif
+  - git clone -b travis https://github.com/sticilface/Arduino ./platformio/packages/framework-arduinoespressif
+  - tree ./platformio/packages/framework-arduinoespressif
   - mkdir /tmp/build
+  - mkdir $TRAVIS_BUILD_DIR/libs
+  - git clone -b upgrade-gui https://github.com/sticilface/ESPmanager $TRAVIS_BUILD_DIR/libs/ESPmanager
+  - git clone https://github.com/bblanchon/ArduinoJson                $TRAVIS_BUILD_DIR/libs/ArduinoJson
+  - git clone https://github.com/me-no-dev/ESPAsyncTCP                $TRAVIS_BUILD_DIR/libs/ESPAsyncTCP
+  - git clone https://github.com/me-no-dev/ESPAsyncWebServer          $TRAVIS_BUILD_DIR/libs/ESPAsyncWebServer
+
+
 script:
-  - platformio ci --board="esp12e" --build-dir="/tmp/build" --lib="." 
+  - platformio ci --board="esp12e" --build-dir="/tmp/build" --lib="." --lib="$TRAVIS_BUILD_DIR/libs/ESPmanager" --lib="$TRAVIS_BUILD_DIR/libs/ArduinoJson"
+    --lib="$TRAVIS_BUILD_DIR/libs/ESPAsyncTCP" --lib="$TRAVIS_BUILD_DIR/libs/ESPAsyncWebServer"
