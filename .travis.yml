@@ -14,9 +14,10 @@ addons:
     - tree
 install:
   - pip install -U platformio
-  - rm -rf ./platformio/packages/framework-arduinoespressif
+  - platformio platforms install espressif
+  # - rm -rf ./platformio/packages/framework-arduinoespressif
   # - git clone -b travis https://github.com/sticilface/Arduino ./platformio/packages/framework-arduinoespressif
-  # - tree ./platformio/packages
+  - tree ./platformio/packages
   # - cat ./platformio/packages/framework-arduinoespressif/cores/esp8266/Esp.cpp
   - mkdir /tmp/build
   - mkdir $TRAVIS_BUILD_DIR/libs
