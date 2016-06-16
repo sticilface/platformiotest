@@ -1,91 +1,67 @@
-/*
- *  This sketch sends data via HTTP GET requests to data.sparkfun.com service.
- *
- *  You need to get streamId and privateKey at data.sparkfun.com and paste them
- *  below. Or just customize this script to talk to other HTTP servers.
- *
- */
+/*-------------------------------------------------------------------------------------------------------
 
+
+                            Example ESP Manager software..
+
+BeerWare Licence, just give due credits
+
+Upload files to the ESP using this command (on mac and linux anyway, can upload using serial via SPIFFS data upload too)
+for file in `ls -A1`; do curl -F "file=@$PWD/$file" X.X.X.X/espman/upload; done
+ * Thanks to me-no-dev
+
+--------------------------------------------------------------------------------------------------------*/
+#include <FS.h> //  Settings saved to SPIFFS
 #include <ESP8266WiFi.h>
+#include <ESP8266HTTPClient.h>
+#include <ESP8266httpUpdate.h>
+#include <ESPAsyncTCP.h>
+#include <ESPAsyncWebServer.h>
+#include <AsyncJson.h>
 
-const char* ssid     = "your-ssid";
-const char* password = "your-password";
+#include <ArduinoOTA.h>
+#include <ArduinoJson.h> // required for settings file to make it readable
 
-const char* host = "data.sparkfun.com";
-const char* streamId   = "....................";
-const char* privateKey = "....................";
+#include <Hash.h>
+#include <ESP8266mDNS.h>
 
-void setup() {
-  Serial.begin(115200);
-  delay(10);
+#include <ESPmanager.h>
 
-  // We start by connecting to a WiFi network
+AsyncWebServer HTTP(80);
 
-  Serial.println();
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-  
-  WiFi.begin(ssid, password);
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
+ESPmanager settings(HTTP, SPIFFS, "ESPManager");
 
-  Serial.println("");
-  Serial.println("WiFi connected");  
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+
+//  You can specify a default hard coded set of credentials
+/*
+const char * defaultSSID = "";
+const char * defaultPSK = "";
+ESPmanager settings(HTTP, SPIFFS, "ESPManager", defaultSSID , defaultPSK);
+*/
+
+void setup()
+{
+
+    Serial.begin(115200);
+    SPIFFS.begin();
+
+    Serial.println("");
+    Serial.println(F("Example ESPconfig - using ESPAsyncWebServer"));
+
+    Serial.printf("Sketch size: %u\n", ESP.getSketchSize());
+    Serial.printf("Free size: %u\n", ESP.getFreeSketchSpace());
+
+    settings.begin();
+
+    HTTP.begin();
+
+    Serial.print(F("Free Heap: "));
+    Serial.println(ESP.getFreeHeap());
+
+
 }
 
-int value = 0;
 
-void loop() {
-  delay(5000);
-  ++value;
-
-  Serial.print("connecting to ");
-  Serial.println(host);
-  
-  // Use WiFiClient class to create TCP connections
-  WiFiClient client;
-  const int httpPort = 80;
-  if (!client.connect(host, httpPort)) {
-    Serial.println("connection failed");
-    return;
-  }
-  
-  // We now create a URI for the request
-  String url = "/input/";
-  url += streamId;
-  url += "?private_key=";
-  url += privateKey;
-  url += "&value=";
-  url += value;
-  
-  Serial.print("Requesting URL: ");
-  Serial.println(url);
-  
-  // This will send the request to the server
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
-               "Connection: close\r\n\r\n");
-  unsigned long timeout = millis();
-  while (client.available() == 0) {
-    if (millis() - timeout > 5000) {
-      Serial.println(">>> Client Timeout !");
-      client.stop();
-      return;
-    }
-  }
-  
-  // Read all the lines of the reply from server and print them to Serial
-  while(client.available()){
-    String line = client.readStringUntil('\r');
-    Serial.print(line);
-  }
-  
-  Serial.println();
-  Serial.println("closing connection");
+void loop()
+{
+    settings.handle();
 }
