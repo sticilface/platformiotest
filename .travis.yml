@@ -7,7 +7,7 @@ sudo: false
 #   - ~/.platformio
 env:
   matrix:
-  - PLATFORMIO_CI_SRC="$TRAVIS_BUILD_DIR/testfolder/testfolder.ino" PLATFORMIO_BUILD_FLAGS="-Wl,-lstdc++"
+  - PLATFORMIO_CI_SRC="$TRAVIS_BUILD_DIR/testfolder/testfolder.ino" PLATFORMIO_BUILD_FLAGS="-lstdc++"
 addons:
   apt:
     packages:
